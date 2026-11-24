@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SEO + GEO Auditor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="3"/><path d="M18.5 18.5 25 25" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/><path d="M8 14l3-4 2.5 2.5L16 9" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><b>SEO + GEO Auditor</b></div>
+  <nav class="tabs" role="tablist">
+    <button role="tab" id="tab-audit" aria-selected="true" data-tab="audit"><span>1</span>Audit</button>
+    <button role="tab" id="tab-strategy" aria-selected="false" data-tab="strategy"><span>2</span>Competitors & strategy</button>
+  </nav>
+  <div id="cfg" class="cfg"></div>
+</header>
+
+<main>
+  <!-- ============ AUDIT ============ -->
+  <section id="view-audit" class="view">
+    <form id="audit-form" class="panel" novalidate>
+      <div class="form-head"><h1>Audit a page or a whole website</h1><p>Checks technical SEO, on-page, content, speed and structured data, and how ready the site is to be cited by AI search (Google AI Overviews, ChatGPT, Perplexity). This is separate from the strategy step, so you can stop after the audit.</p></div>
+      <label class="field big"><span>Website or page URL</span><input id="a-url" name="url" type="text" inputmode="url" placeholder="example.com or https://example.com/services/seo" required autocomplete="url"></label>
+      <div class="row">
+        <fieldset class="seg"><legend>What to audit</legend>
+          <label><input type="radio" name="mode" value="page" checked><span>This page only</span></label>
+          <label><input type="radio" name="mode" value="site"><span>Whole website</span></label>
+        </fieldset>
+        <label class="field" id="pages-field" hidden><span>Max pages to crawl</span><input name="maxPages" type="number" min="2" max="500" value="25"></label>
+      </div>
+      <label class="field"><span>Business context <em>(optional)</em></span><textarea name="context" rows="2" placeholder="e.g. Dental clinic in Lahore, targets 'teeth whitening', 'dental implants'. Main goal: appointment bookings."></textarea></label>
+
+      <div class="field"><span>Google Search Console data <em>(optional)</em></span>
+        <label id="drop" class="drop" tabindex="0">
+          <input id="gsc" type="file" multiple accept=".csv,.xlsx,.zip,.png,.jpg,.jpeg,.webp,image/*">
+          <svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0-4 4m4-4 4 4M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <b>Drop screenshots or exports here, or click to choose</b>
+          <small>Screenshots (PNG/JPG) of Performance, Pages, Indexing or Core Web Vitals reports · CSV/XLSX exports · the ZIP Search Console gives you when you export</small>
+        </label>
+        <ul id="files" class="files"></ul>
+      </div>
+      <div class="actions"><button class="btn primary" type="submit" id="a-run">Run audit</button><span class="hint" id="a-hint"></span></div>
+    </form>
+    <div id="a-progress" class="progress" hidden><div class="pbar"><i></i></div><p></p></div>
+    <div id="a-actions" class="result-actions" hidden>
+      <a class="btn" id="a-download" href="#">Download report (HTML)</a>
+      <button class="btn" type="button" data-print>Print / save as PDF</button>
+      <button class="btn primary" type="button" id="to-strategy">Continue to competitors & strategy →</button>
+    </div>
+    <div id="a-result"></div>
+  </section>
+
+  <!-- ============ STRATEGY ============ -->
+  <section id="view-strategy" class="view" hidden>
+    <form id="strategy-form" class="panel" novalidate>
+      <div class="form-head"><h1>Competitors, keyword gap & strategy</h1><p>Finds who outranks you on Google, checks keyword rankings for you and each competitor, finds the keyword gap, and writes an SEO + GEO plan. You don't need to run an audit first, but if you have, the plan uses its results.</p></div>
+      <label class="field big"><span>Your website</span><input id="s-url" name="url" type="text" inputmode="url" placeholder="example.com" required></label>
+      <label class="check" id="use-audit-wrap" hidden><input type="checkbox" id="use-audit" checked><span>Use my audit results for <b id="use-audit-host"></b></span></label>
+      <div class="grid3">
+        <label class="field"><span>Country (Google market)</span><select name="country" id="country"></select></label>
+        <label class="field"><span>Language</span><select name="language"><option value="en">English</option><option value="ur">Urdu</option><option value="ar">Arabic</option><option value="es">Spanish</option><option value="fr">French</option><option value="de">German</option><option value="hi">Hindi</option><option value="pt">Portuguese</option><option value="it">Italian</option><option value="nl">Dutch</option></select></label>
+        <label class="field"><span>Competitors to analyse</span><input name="maxCompetitors" type="number" min="1" max="10" value="5"></label>
+      </div>
+      <div class="grid2">
+        <label class="field"><span>Known competitors <em>(optional, one per line)</em></span><textarea name="competitors" rows="3" placeholder="competitor1.com&#10;competitor2.com"></textarea></label>
+        <label class="field"><span>Your target keywords <em>(optional, one per line)</em></span><textarea name="keywords" rows="3" placeholder="leave empty and AI will work them out from your site"></textarea></label>
+      </div>
+      <div class="grid2">
+        <label class="field"><span>Goals</span><input name="goals" type="text" placeholder="e.g. more leads for implants, rank in AI answers"></label>
+        <label class="field"><span>Timeframe</span><select name="timeframe"><option>3 months</option><option selected>6 months</option><option>12 months</option></select></label>
+      </div>
+      <label class="field"><span>Business context <em>(optional)</em></span><textarea name="context" rows="2"></textarea></label>
+      <label class="check"><input type="checkbox" name="includeBig"><span>Include big platforms (Wikipedia, YouTube, Reddit, Amazon…) as competitors</span></label>
+      <div class="actions"><button class="btn primary" type="submit" id="s-run">Build strategy</button><span class="hint" id="s-hint"></span></div>
+    </form>
+    <div id="s-progress" class="progress" hidden><div class="pbar"><i></i></div><p></p></div>
+    <div id="s-actions" class="result-actions" hidden>
+      <a class="btn" id="s-download" href="#">Download strategy (HTML)</a>
+      <button class="btn" type="button" data-print>Print / save as PDF</button>
+    </div>
+    <div id="s-result"></div>
+  </section>
+</main>
+<script type="module" src="app.js"></script>
+</body>
+</html>
